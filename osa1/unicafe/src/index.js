@@ -15,6 +15,7 @@ const Button = ({ clickFunction, text }) => (
   </button>
 )
 
+// statistiikka omassa komponentissa
 const Statistics = ({ good, neutral, bad }) => {
   return (
     <div>
