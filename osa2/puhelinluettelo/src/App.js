@@ -1,5 +1,39 @@
 import React, { useState } from 'react'
 
+
+const Filter = ({ handleFilterChange, filter }) => {
+  return (
+    <div>
+      filter shown with: <input onChange={handleFilterChange} value={filter} />
+    </div>
+  )
+}
+
+
+const PersonForm = ({ addPerson, handleNameChange, handleNumberChange, newName, newNumber }) => {
+  return (
+    <form onSubmit={addPerson}>
+      <div>
+        name: <input onChange={handleNameChange} value={newName} />
+      </div>
+      <div>
+        number: <input onChange={handleNumberChange} value={newNumber} />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
+}
+
+
+const Persons = ({ persons, filter }) => {
+  let p = persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
+  p = p.map(person => <p key={person.name}>{person.name} {person.number}</p>)
+  return (<div>{p}</div>)
+}
+
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
@@ -37,12 +71,6 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-  // puhelinnumero rivit
-  const rows = () => {
-    const p = persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
-    return p.map(person => <p key={person.name}>{person.name} {person.number}</p>)
-  }
-
   // filtterin muokkaus
   const handleFilterChange = (event) => {
     setFilter(event.target.value)
@@ -51,25 +79,19 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with: <input onChange={handleFilterChange} value={filter} />
-      </div>
+      <Filter handleFilterChange={handleFilterChange} filter={filter} />
 
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input onChange={handleNameChange} value={newName} />
-        </div>
-        <div>
-          number: <input onChange={handleNumberChange} value={newNumber}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <h3>add a new</h3>
+      <PersonForm
+        addPerson={addPerson}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        newName={newName}
+        newNumber={newNumber}
+      />
 
-      <h2>Numbers</h2>
-      {rows()}
+      <h3>Numbers</h3>
+      <Persons persons={persons} filter={filter} />
     </div>
   )
 
