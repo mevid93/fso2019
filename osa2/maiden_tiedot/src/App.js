@@ -28,13 +28,27 @@ const Country = ({ country }) => {
   )
 }
 
+const Countrylist = ({ countries, handleFilter }) => {
+  const rows = () => countries.map(country => {
+    return (
+      <div key={country.numericCode}>
+        {country.name} <button onClick={handleFilter} value={country.name}>show</button>
+      </div>
+    )
+  })
+  return (
+    <div>{rows()}</div>
+  )
+}
 
-const Countries = ({ countries, filter }) => {
+const Countries = ({ handleFilter, countries, filter }) => {
   const filtered = countries.filter(country => country.name.toLowerCase().includes(filter.toLowerCase()))
   if (filtered.length > 10) {
     return (<div>Too many matches, specify another filter</div>)
   } else if (filtered.length !== 1) {
-    return (<div>{filtered.map(country => <div key={country.numericCode}>{country.name}</div>)}</div>)
+    return (
+      <Countrylist countries={filtered} handleFilter={handleFilter} />
+    )
   }
   return <Country country={filtered[0]} />
 }
@@ -61,7 +75,7 @@ const App = () => {
   return (
     <div>
       <Filter handleFilter={handleFilterChange} filter={filter} />
-      <Countries countries={countries} filter={filter} />
+      <Countries handleFilter={handleFilterChange} countries={countries} filter={filter} />
     </div>
   )
 }
