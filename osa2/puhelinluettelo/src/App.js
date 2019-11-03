@@ -57,12 +57,26 @@ const Notification = ({ message }) => {
 }
 
 
+const Error = ({ message }) => {
+  if (message == null) {
+    return null
+  }
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
+
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState(null)
+  const [error, setError] = useState(null)
 
   // alkutila --> haetaan data kannasta
   useEffect(() => {
@@ -89,9 +103,14 @@ const App = () => {
             setPersons(persons.map(person => person.id !== oldPerson.id ? person : editedPerson))
             setNotification(`Updated ${oldPerson.name}`)
             setTimeout(() => {setNotification(null)}, 2000)
+            setNewName('')
+            setNewNumber('')
           })
-        setNewName('')
-        setNewNumber('')
+          .catch(error => { // henkilö ehdittiin poistaa
+            setPersons(persons.filter(person => person.id !== oldPerson.id))
+            setError(`Information of ${oldPerson.name} has already been removed from server`)
+            setTimeout(() => {setError(null)}, 2000)
+          })
       }
       return
     }
@@ -117,6 +136,12 @@ const App = () => {
           setNotification(`Removed ${person.name}`)
           setTimeout(() => {setNotification(null)}, 2000)
         })
+        .catch(error => {
+          // henkilö oli jo ehditty poistaa, mutta sillä ei ole merkitystä käyttäjälle
+          setError(`Information of ${person.name} has already been removed from server`)
+          setTimeout(() => {setError(null)}, 2000)
+          setPersons(persons.filter(person => person.id !== id))
+        })
     }
   }
 
@@ -139,6 +164,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={notification} />
+      <Error message={error} />
       <Filter handleFilterChange={handleFilterChange} filter={filter} />
 
       <h3>add a new</h3>
