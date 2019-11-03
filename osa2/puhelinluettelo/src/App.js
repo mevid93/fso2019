@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
+import './App.css'
 
 
 const Filter = ({ handleFilterChange, filter }) => {
@@ -44,11 +45,24 @@ const Persons = ({ persons, filter, deleteMethod }) => {
 }
 
 
+const Notification = ({ message }) => {
+  if (message == null) {
+    return null
+  }
+  return (
+    <div className="notification">
+      {message}
+    </div>
+  )
+}
+
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState(null)
 
   // alkutila --> haetaan data kannasta
   useEffect(() => {
@@ -73,6 +87,8 @@ const App = () => {
           .update(oldPerson.id, personObject)
           .then(editedPerson => {
             setPersons(persons.map(person => person.id !== oldPerson.id ? person : editedPerson))
+            setNotification(`Updated ${oldPerson.name}`)
+            setTimeout(() => {setNotification(null)}, 2000)
           })
         setNewName('')
         setNewNumber('')
@@ -83,6 +99,8 @@ const App = () => {
       .create(personObject)
       .then(addedPerson => {
         setPersons(persons.concat(addedPerson))
+        setNotification(`Added ${addedPerson.name}`)
+        setTimeout(() => {setNotification(null)}, 2000)
       })
     setNewName('')
     setNewNumber('')
@@ -94,9 +112,11 @@ const App = () => {
     if (window.confirm(`Delete ${person.name}?`)) {
       personService
         .remove(id)
-        .then(response =>
+        .then(response => {
           setPersons(persons.filter(person => person.id !== id))
-        )
+          setNotification(`Removed ${person.name}`)
+          setTimeout(() => {setNotification(null)}, 2000)
+        })
     }
   }
 
@@ -118,6 +138,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter handleFilterChange={handleFilterChange} filter={filter} />
 
       <h3>add a new</h3>
