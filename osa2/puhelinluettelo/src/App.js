@@ -28,9 +28,18 @@ const PersonForm = ({ addPerson, handleNameChange, handleNumberChange, newName, 
 }
 
 
-const Persons = ({ persons, filter }) => {
+const Person = ({ person, deleteMethod }) => {
+  return (
+    <div>
+      {person.name} {person.number} <button onClick={() => deleteMethod(person.id)}>delete</button>
+    </div>
+  )
+}
+
+
+const Persons = ({ persons, filter, deleteMethod }) => {
   let p = persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
-  p = p.map(person => <p key={person.name}>{person.name} {person.number}</p>)
+  p = p.map(person => <Person key={person.id} person={person} deleteMethod={deleteMethod} />)
   return (<div>{p}</div>)
 }
 
@@ -45,8 +54,8 @@ const App = () => {
   useEffect(() => {
     personService
       .getAll()
-      .then(response => {
-        setPersons(response.data)
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }, [])
 
@@ -63,11 +72,23 @@ const App = () => {
     }
     personService
       .create(personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+      .then(addedPerson => {
+        setPersons(persons.concat(addedPerson.data))
       })
     setNewName('')
     setNewNumber('')
+  }
+
+  // poistetaan henkilö
+  const deletePerson = (id) => {
+    const person = persons.find(person => person.id === id)
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService
+      .remove(id)
+      .then(response =>
+        setPersons(persons.filter(person => person.id !== id))
+      )
+    }
   }
 
   // lisättävän nimen muokkaus
@@ -100,7 +121,7 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} filter={filter} deleteMethod={deletePerson} />
     </div>
   )
 
