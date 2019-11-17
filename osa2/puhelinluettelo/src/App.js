@@ -102,14 +102,14 @@ const App = () => {
           .then(editedPerson => {
             setPersons(persons.map(person => person.id !== oldPerson.id ? person : editedPerson))
             setNotification(`Updated ${oldPerson.name}`)
-            setTimeout(() => {setNotification(null)}, 2000)
+            setTimeout(() => { setNotification(null) }, 2000)
             setNewName('')
             setNewNumber('')
           })
           .catch(error => { // henkilö ehdittiin poistaa
             setPersons(persons.filter(person => person.id !== oldPerson.id))
             setError(`Information of ${oldPerson.name} has already been removed from server`)
-            setTimeout(() => {setError(null)}, 2000)
+            setTimeout(() => { setError(null) }, 2000)
           })
       }
       return
@@ -119,7 +119,11 @@ const App = () => {
       .then(addedPerson => {
         setPersons(persons.concat(addedPerson))
         setNotification(`Added ${addedPerson.name}`)
-        setTimeout(() => {setNotification(null)}, 2000)
+        setTimeout(() => { setNotification(null) }, 2000)
+      })
+      .catch(error => {
+        setError(error.response.data.error)
+        setTimeout(() => { setError(null) }, 2000)
       })
     setNewName('')
     setNewNumber('')
@@ -134,12 +138,12 @@ const App = () => {
         .then(response => {
           setPersons(persons.filter(person => person.id !== id))
           setNotification(`Removed ${person.name}`)
-          setTimeout(() => {setNotification(null)}, 2000)
+          setTimeout(() => { setNotification(null) }, 2000)
         })
         .catch(error => {
           // henkilö oli jo ehditty poistaa, mutta sillä ei ole merkitystä käyttäjälle
           setError(`Information of ${person.name} has already been removed from server`)
-          setTimeout(() => {setError(null)}, 2000)
+          setTimeout(() => { setError(null) }, 2000)
           setPersons(persons.filter(person => person.id !== id))
         })
     }
