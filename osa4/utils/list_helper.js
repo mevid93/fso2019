@@ -30,9 +30,25 @@ const mostBlogs = (blogs) => {
   return author === undefined ? undefined : { author: author, blogs: count }
 }
 
+const mostLikes = (blogs) => {
+  const mapped = blogs.map(blog => { return { author: blog.author, likes: blog.likes } })
+  const groups = lodash.groupBy(mapped, 'author')
+  let author = undefined
+  let likes = 0
+  lodash.forEach(groups, (value, key) => {
+    const sum = lodash.sumBy(value, 'likes')
+    if (sum > likes) {
+      author = key
+      likes = sum
+    }
+  })
+  return author === undefined ? undefined : { author, likes }
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
