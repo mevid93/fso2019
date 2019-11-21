@@ -24,6 +24,12 @@ describe('blogs api', () => {
     expect(response.body.length).toBe(helper.initialBlogs.length)
   })
 
+  test('blog identifier is named as id', async () => {
+    const response = await api.get('/api/blogs')
+    expect(response.body[0]._id).not.toBeDefined()
+    expect(response.body[0].id).toBeDefined()
+  })
+
 })
 
 afterAll(() => {
