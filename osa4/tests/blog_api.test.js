@@ -19,7 +19,7 @@ describe('blogs api', () => {
       .expect('Content-Type', /application\/json/)
   })
 
-  test('correct number of blogs are returned from /abi/blogs', async () => {
+  test('correct number of blogs are returned', async () => {
     const response = await api.get('/api/blogs')
     expect(response.body.length).toBe(helper.initialBlogs.length)
   })
@@ -28,6 +28,40 @@ describe('blogs api', () => {
     const response = await api.get('/api/blogs')
     expect(response.body[0]._id).not.toBeDefined()
     expect(response.body[0].id).toBeDefined()
+  })
+
+  test('new blog can be added', async () => {
+    const newBlog = {
+      title: "Blogging blogs",
+      author: "Blog TheBlogger",
+      url: "https://awesomeblogs.com/",
+      likes: 0,
+    }
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+  })
+
+  test('after adding new blog, the corresponding title can be found', async () => {
+    const response = await api.get('/api/blogs')
+    let titles = response.body.map(r => r.title)
+    expect(titles).not.toContain('Blogging blogs')
+    
+    const newBlog = {
+      title: "Blogging blogs",
+      author: "Blog TheBlogger",
+      url: "https://awesomeblogs.com/",
+      likes: 0,
+    }
+    await api.post('/api/blogs').send(newBlog)
+    const blogsAtEnd = await helper.blogsInDb()
+    titles = blogsAtEnd.map(r => r.title)
+    expect(titles).toContain('Blogging blogs')
   })
 
 })
