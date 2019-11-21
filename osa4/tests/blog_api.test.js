@@ -89,6 +89,30 @@ describe('blogs api', () => {
     expect(blog.likes).toBe(100)
   })
 
+  test('new blog needs to have title to be considered as valid', async () => {
+    const newBlog = {
+      author: "Blog TheBlogger",
+      url: "https://awesomeblogs.com/",
+      likes: 100
+    }
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
+  test('new blog needs to have url to be considered as valid', async () => {
+    const newBlog = {
+      title: "Blogging blogs",
+      author: "Blog TheBlogger",
+      likes: 100
+    }
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
 })
 
 afterAll(() => {
