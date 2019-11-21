@@ -64,6 +64,31 @@ describe('blogs api', () => {
     expect(titles).toContain('Blogging blogs')
   })
 
+  test('blog likes will be set to 0, if undefined', async () => {
+    const newBlog = {
+      title: "Blogging blogs",
+      author: "Blog TheBlogger",
+      url: "https://awesomeblogs.com/"
+    }
+    await api.post('/api/blogs').send(newBlog)
+    const blogsAtEnd = await helper.blogsInDb()
+    const blog = blogsAtEnd.find(blog => blog.title === newBlog.title)
+    expect(blog.likes).toBe(0)
+  })
+
+  test('blog likes will remain unchainged, if not undefined', async () => {
+    const newBlog = {
+      title: "Blogging blogs",
+      author: "Blog TheBlogger",
+      url: "https://awesomeblogs.com/",
+      likes: 100
+    }
+    await api.post('/api/blogs').send(newBlog)
+    const blogsAtEnd = await helper.blogsInDb()
+    const blog = blogsAtEnd.find(blog => blog.title === newBlog.title)
+    expect(blog.likes).toBe(100)
+  })
+
 })
 
 afterAll(() => {
