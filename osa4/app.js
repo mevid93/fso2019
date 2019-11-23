@@ -17,6 +17,8 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
     console.log('error connecting to MongoDB', error.message)
   })
 
+mongoose.set('useFindAndModify', false)
+
 app.use(cors())
 app.use(express.static('build'))
 app.use(bodyParser.json())

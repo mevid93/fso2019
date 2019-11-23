@@ -123,6 +123,18 @@ describe('blogs api', () => {
     expect(blogsAtEnd.length).toBe(helper.initialBlogs.length - 1)
   })
 
+  test('blog can be edited with valid title and url', async () => {
+    const blogs = await helper.blogsInDb()
+    const blog = blogs[0]
+    const initialLikes = blog.likes
+    blog.likes = initialLikes + 10
+    const response = await api
+      .put(`/api/blogs/${blog.id}`)
+      .send(blog)
+      .expect(200)
+    expect(response.body.likes).toBe(initialLikes + 10)
+  })
+
 })
 
 afterAll(() => {
