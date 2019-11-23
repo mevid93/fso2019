@@ -113,6 +113,16 @@ describe('blogs api', () => {
       .expect(400)
   })
 
+  test('existing blog can be deleted', async () => {
+    const response = await api.get('/api/blogs')
+    const id = response.body[0].id
+    await api
+      .delete(`/api/blogs/${id}`)
+      .expect(204)
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length - 1)
+  })
+
 })
 
 afterAll(() => {
