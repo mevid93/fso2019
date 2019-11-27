@@ -46,6 +46,35 @@ describe('users api', () => {
     expect(usersAtEnd.length).toBe(helper.initialUsers.length + 1)
   })
 
+  test('username must be unique', async () => {
+    const users = await helper.usersInDb()
+    const user = users[0]
+    const newUser = {
+      username: user.username,
+      name: "name nameless",
+      password: "secret"
+    }
+    await api.post('/api/users').send(newUser).expect(400)
+  })
+
+  test('username must be at least 3 characters', async () => {
+    const newUser = {
+      username: "no",
+      name: "name nameless",
+      password: "secret"
+    }
+    await api.post('/api/users').send(newUser).expect(400)
+  })
+
+  test('password must be at least 3 characters', async () => {
+    const newUser = {
+      username: "yes",
+      name: "name nameless",
+      password: "no"
+    }
+    await api.post('/api/users').send(newUser).expect(400)
+  })
+
 })
 
 afterAll(() => {
