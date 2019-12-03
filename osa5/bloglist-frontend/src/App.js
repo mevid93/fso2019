@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import loginService from './services/login';
 import blogService from './services/blogs';
 import Blog from './components/Blog';
+import { ErrorNotification, InfoNotification } from './components/Notification'
 
-const BlogCreateForm = ({ blogs, setBlogs }) => {
+const CreateForm = ({ blogs, setBlogs, setErrorMessage, setInfoMessage }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -16,8 +17,11 @@ const BlogCreateForm = ({ blogs, setBlogs }) => {
       setAuthor('')
       setUrl('')
       setBlogs(blogs.concat(blog))
+      setInfoMessage(`a new blog ${blog.title} by ${blog.author} added`)
+      setTimeout(() => setInfoMessage(null), 3000)
     } catch (exception) {
-      // error
+      setErrorMessage('Failed to create blog')
+      setTimeout(() => setErrorMessage(null), 3000)
     }
   }
 
@@ -45,6 +49,8 @@ function App() {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [infoMessage, setInfoMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => {
@@ -71,7 +77,8 @@ function App() {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      // login failed
+      setErrorMessage('wrong username or password')
+      setTimeout(() => { setErrorMessage(null) }, 3000)
     }
   }
 
@@ -83,7 +90,6 @@ function App() {
   const loginForm = () => {
     return (
       <div>
-        <h2>log in to application</h2>
         <form onSubmit={handleLogin}>
           <div>
             username <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
@@ -99,9 +105,12 @@ function App() {
 
   return (
     <div>
-      {user !== null ? <h2>blogs</h2> : loginForm()}
+      {user !== null ? <h2>blogs</h2> : <h2>log in to application</h2>}
+      {errorMessage !== null && <ErrorNotification msg={errorMessage} />}
+      {infoMessage !== null && <InfoNotification msg={infoMessage} />}
+      {user == null && loginForm()}
       {user !== null && <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>}
-      {user !== null && <BlogCreateForm blogs={blogs} setBlogs={setBlogs} />}
+      {user !== null && <CreateForm blogs={blogs} setBlogs={setBlogs} setErrorMessage={setErrorMessage} setInfoMessage={setInfoMessage} />}
       {user !== null && blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
     </div>
   )
