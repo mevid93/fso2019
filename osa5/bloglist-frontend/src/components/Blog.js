@@ -23,7 +23,8 @@ const Blog = ({ blog, blogs, setBlogs }) => {
       id: blog.id
     }
     const updatedBlog = await blogService.update(blogObject)
-    setBlogs(blogs.map(b => b.id != updatedBlog.id ? b : updatedBlog))
+    const updatedBlogs = blogs.map(b => b.id != updatedBlog.id ? b : updatedBlog)
+    setBlogs(updatedBlogs.sort((a, b) => { return b.likes - a.likes }))
   }
 
   return (

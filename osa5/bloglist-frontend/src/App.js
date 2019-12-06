@@ -16,6 +16,7 @@ function App() {
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => {
+      initialBlogs.sort((a, b) => { return b.likes - a.likes })
       setBlogs(initialBlogs)
     })
   }, [])
