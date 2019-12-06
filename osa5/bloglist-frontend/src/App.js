@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import loginService from './services/login';
-import blogService from './services/blogs';
-import Blog from './components/Blog';
+import React, { useState, useEffect } from 'react'
+import loginService from './services/login'
+import blogService from './services/blogs'
+import Blog from './components/Blog'
 import { ErrorNotification, InfoNotification } from './components/Notification'
 import { LoginForm, CreateForm } from './components/Form'
 
@@ -63,7 +63,7 @@ function App() {
       {user !== null ? <h2>blogs</h2> : <h2>log in to application</h2>}
       {errorMessage !== null && <ErrorNotification msg={errorMessage} />}
       {infoMessage !== null && <InfoNotification msg={infoMessage} />}
-      {user == null &&
+      {user === null &&
         <LoginForm
           handleLogin={handleLogin}
           handleUsernameChange={handleUsernameChange}
@@ -88,4 +88,4 @@ function App() {
   )
 }
 
-export default App;
+export default App

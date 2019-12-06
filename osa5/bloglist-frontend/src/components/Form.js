@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 // form for creating new blog
 const CreateForm = ({ blogs, setBlogs, setErrorMessage, setInfoMessage, createBlogVisible, setCreateBlogVisible }) => {
@@ -67,6 +68,14 @@ const LoginForm = ({ handleLogin, handleUsernameChange, handlePasswordChange, us
       </form>
     </div>
   )
+}
+
+LoginForm.propTypes = {
+  handleLogin: PropTypes.func.isRequired,
+  handleUsernameChange: PropTypes.func.isRequired,
+  handlePasswordChange: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired
 }
 
 export { CreateForm, LoginForm }
