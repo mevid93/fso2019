@@ -23,8 +23,15 @@ const Blog = ({ blog, blogs, setBlogs }) => {
       id: blog.id
     }
     const updatedBlog = await blogService.update(blogObject)
-    const updatedBlogs = blogs.map(b => b.id != updatedBlog.id ? b : updatedBlog)
+    const updatedBlogs = blogs.map(b => b.id !== updatedBlog.id ? b : updatedBlog)
     setBlogs(updatedBlogs.sort((a, b) => { return b.likes - a.likes }))
+  }
+
+  const handleRemove = async () => {
+    if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
+      blogService.remove(blog.id)
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+    }
   }
 
   return (
@@ -36,6 +43,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
         <a href={blog.url}>{blog.url}</a>
         <div>{blog.likes} likes <button onClick={handleLike}>like</button></div>
         <div>added by {blog.user.name}</div>
+        <button onClick={handleRemove}>remove</button>
       </div>
     </div >
   )
