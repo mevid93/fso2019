@@ -16,7 +16,9 @@ const CreateForm = ({ blogs, setBlogs, setErrorMessage, setInfoMessage, createBl
       setTitle('')
       setAuthor('')
       setUrl('')
-      setBlogs(blogs.concat(blog))
+      const updatedBlogs = blogs.concat(blog)
+      updatedBlogs.sort((a, b) => { return b.likes - a.likes })
+      setBlogs(updatedBlogs)
       setInfoMessage(`a new blog ${blog.title} by ${blog.author} added`)
       setTimeout(() => setInfoMessage(null), 3000)
     } catch (exception) {

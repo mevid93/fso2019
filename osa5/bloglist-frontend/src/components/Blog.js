@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import blogService from '../services/blogs';
 
-const Blog = ({ blog, blogs, setBlogs }) => {
+const Blog = ({ blog, blogs, setBlogs, user }) => {
   const [showAllInfo, setShowAllInfo] = useState(false)
   const showWhenAllInfo = { display: showAllInfo ? '' : 'none' }
+  const createdByLoggedUser = { display: user.username === blog.user.username ? '' : 'none' }
 
   const blogStyle = {
     paddingTop: 10,
@@ -43,7 +44,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
         <a href={blog.url}>{blog.url}</a>
         <div>{blog.likes} likes <button onClick={handleLike}>like</button></div>
         <div>added by {blog.user.name}</div>
-        <button onClick={handleRemove}>remove</button>
+        <button style={createdByLoggedUser} onClick={handleRemove}>remove</button>
       </div>
     </div >
   )
