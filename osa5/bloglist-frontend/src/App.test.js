@@ -20,4 +20,27 @@ describe('<App />', () => {
     )
 
   })
+
+  test('renders blogs when user has logged in', async () => {
+    const user = {
+      username: 'tester',
+      token: '1231231214',
+      name: 'Donald Tester'
+    }
+
+    localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+
+    const component = render(
+      <App />
+    )
+
+    component.rerender(<App />)
+    await waitForElement(
+      () => component.container.querySelector('.clickableDiv') // each blog has className clickableDiv
+    )
+
+    expect(component.container).toHaveTextContent(
+      'blogs'
+    )
+  })
 })

@@ -41,4 +41,9 @@ const getAll = () => {
   return Promise.resolve(blogs)
 }
 
-export default { getAll }
+
+const setToken = (newToken) => {
+  console.log('Useless mock function', newToken)
+}
+
+export default { getAll, setToken }
