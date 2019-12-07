@@ -57,7 +57,7 @@ const CreateForm = ({ blogs, setBlogs, setErrorMessage, setInfoMessage, createBl
 const LoginForm = ({ handleLogin, handleUsernameChange, handlePasswordChange, username, password }) => {
   return (
     <div>
-      <form onSubmit={handleLogin}>
+      <form className="loginForm" onSubmit={handleLogin}>
         <div>
           username <input type="text" value={username} name="Username" onChange={handleUsernameChange} />
         </div>
