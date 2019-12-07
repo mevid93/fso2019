@@ -37,7 +37,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
   }
 
   return (
-    <div style={blogStyle} onClick={() => setShowAllInfo(!showAllInfo)}>
+    <div className="clickableDiv" style={blogStyle} onClick={() => setShowAllInfo(!showAllInfo)}>
       <div>
         {blog.title} {blog.author}
       </div>
