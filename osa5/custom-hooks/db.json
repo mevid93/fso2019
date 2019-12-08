@@ -1,0 +1,38 @@
+{
+  "notes": [
+    {
+      "content": "custom-hooks are awesome!",
+      "id": 1
+    },
+    {
+      "content": "best feature ever <3",
+      "id": 2
+    },
+    {
+      "content": "Toimii niin kuin pitää",
+      "id": 3
+    }
+  ],
+  "persons": [
+    {
+      "name": "mluukkai",
+      "number": "040-5483923",
+      "id": 1
+    },
+    {
+      "name": "jotain",
+      "number": "jotain",
+      "id": 2
+    },
+    {
+      "name": "jotain",
+      "number": "jotain",
+      "id": 3
+    },
+    {
+      "name": "Nakamura",
+      "number": "040-12345678",
+      "id": 4
+    }
+  ]
+}
