@@ -2,6 +2,7 @@ import React from 'react'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
+import filterInvalidDOMProps from 'filter-invalid-dom-props'
 
 // form for creating new blog
 const CreateForm = ({ blogs, setBlogs, setErrorMessage, setInfoMessage, createBlogVisible, setCreateBlogVisible }) => {
@@ -38,13 +39,13 @@ const CreateForm = ({ blogs, setBlogs, setErrorMessage, setInfoMessage, createBl
         <h2>create new</h2>
         <form onSubmit={handleCreate}>
           <div>
-            title: <input {...title} />
+            title: <input {...filterInvalidDOMProps(title)} />
           </div>
           <div>
-            author: <input {...author} />
+            author: <input {...filterInvalidDOMProps(author)} />
           </div>
           <div>
-            url: <input {...url} />
+            url: <input {...filterInvalidDOMProps(url)} />
           </div>
           <button type="submit">create</button>
         </form>
@@ -60,10 +61,10 @@ const LoginForm = ({ handleLogin, username, password }) => {
     <div>
       <form className="loginForm" onSubmit={handleLogin}>
         <div>
-          username <input {...username} />
+          username <input {...filterInvalidDOMProps(username)} />
         </div>
         <div>
-          password <input {...password} />
+          password <input {...filterInvalidDOMProps(password)} />
         </div>
         <button type="submit">login</button>
       </form>
