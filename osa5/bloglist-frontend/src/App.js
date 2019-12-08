@@ -4,10 +4,11 @@ import blogService from './services/blogs'
 import Blog from './components/Blog'
 import { ErrorNotification, InfoNotification } from './components/Notification'
 import { LoginForm, CreateForm } from './components/Form'
+import { useField } from './hooks'
 
 function App() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const username = useField('text')
+  const password = useField('password')
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
@@ -33,12 +34,12 @@ function App() {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({ username, password })
+      const user = await loginService.login({ username: username.value, password: password.value })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
+      username.reset()
+      password.reset()
     } catch (exception) {
       setErrorMessage('wrong username or password')
       setTimeout(() => { setErrorMessage(null) }, 3000)
@@ -50,14 +51,6 @@ function App() {
     setUser(null)
   }
 
-  const handleUsernameChange = ({ target }) => {
-    setUsername(target.value)
-  }
-
-  const handlePasswordChange = ({ target }) => {
-    setPassword(target.value)
-  }
-
   return (
     <div>
       {user !== null ? <h2>blogs</h2> : <h2>log in to application</h2>}
@@ -66,8 +59,6 @@ function App() {
       {user === null &&
         <LoginForm
           handleLogin={handleLogin}
-          handleUsernameChange={handleUsernameChange}
-          handlePasswordChange={handlePasswordChange}
           username={username}
           password={password}
         />
@@ -83,7 +74,7 @@ function App() {
           setCreateBlogVisible={setCreateBlogVisible}
         />
       }
-      {user !== null && blogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user}/>)}
+      {user !== null && blogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} />)}
     </div>
   )
 }
