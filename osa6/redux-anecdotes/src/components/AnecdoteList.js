@@ -4,7 +4,11 @@ import { setNotification, clearNotification } from '../reducers/notificationRedu
 
 const AnecdoteList = (props) => {
 
-  const anecdotes = props.store.getState().anecdotes
+  // haetaan kaikki anecdootit
+  let anecdotes = props.store.getState().anecdotes
+  const filter = props.store.getState().filter
+  // suodatetaan
+  anecdotes = props.store.filter === '' ? anecdotes : anecdotes.filter(a => a.content.includes(filter))
 
   const vote = (id) => {
     props.store.dispatch(
