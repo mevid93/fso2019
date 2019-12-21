@@ -5,42 +5,38 @@ import { connect } from 'react-redux'
 
 const AnecdoteList = (props) => {
 
-  // haetaan kaikki anecdootit
-  let anecdotes = props.anecdotes
-  const filter = props.filter
-  // suodatetaan
-  anecdotes = props.filter === '' ? anecdotes : anecdotes.filter(a => a.content.includes(filter))
-
   const vote = (id) => {
     props.voteAnecdote(id)
-    props.setNotification(`you voted '${anecdotes.find(a => a.id === id).content}'`)
+    props.setNotification(`you voted '${props.anecdotesToShow.find(a => a.id === id).content}'`)
     setTimeout(() => {
       props.clearNotification()
-      
+
     }, 5000)
   }
 
   return (
     <div>
-      {anecdotes.map(anecdote =>
-        <div key={anecdote.id}>
-          <div>
-            {anecdote.content}
-          </div>
-          <div>
-            has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
-          </div>
+      {props.anecdotesToShow.map(anecdote => <div key={anecdote.id}>
+        <div>
+          {anecdote.content}
         </div>
+        <div>
+          has {anecdote.votes}
+          <button onClick={() => vote(anecdote.id)}>vote</button>
+        </div>
+      </div>
       )}
     </div>
   )
 }
 
+const anecdotesToShow = ({ anecdotes, filter }) => {
+  return filter === null ? anecdotes : anecdotes.filter(a => a.content.includes(filter))
+}
+
 const mapStateToProps = (state) => {
   return {
-    anecdotes: state.anecdotes,
-    filter: state.filter
+    anecdotesToShow: anecdotesToShow(state)
   }
 }
 
