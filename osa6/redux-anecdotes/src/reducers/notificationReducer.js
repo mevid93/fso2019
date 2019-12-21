@@ -11,12 +11,12 @@ export const clearNotification = () => {
   return {
     type: 'CLEAR_NOTIFICATION',
     data: {
-      content: ''
+      content: null
     }
   }
 }
 
-const initialState = ''
+const initialState = null
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
