@@ -3,7 +3,7 @@
     {
       "content": "If it hurts, do it more often",
       "id": "47145",
-      "votes": 1
+      "votes": 11
     },
     {
       "content": "Adding manpower to a late software project makes it later!",
@@ -34,6 +34,11 @@
       "content": "Separate program logic from components",
       "votes": 0,
       "id": "F4Z_EJ-"
+    },
+    {
+      "content": "The best thing about a boolean is even if you are wrong, you are only off by a bit. ",
+      "votes": 1,
+      "id": "C3eEx26"
     }
   ]
 }
