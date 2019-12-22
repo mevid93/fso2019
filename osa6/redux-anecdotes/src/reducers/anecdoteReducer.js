@@ -1,9 +1,14 @@
 import anecdoteService from '../services/anecdotes'
 
 export const voteAnecdote = (id) => {
-  return {
-    type: 'VOTE',
-    data: { id }
+  return async dispatch => {
+    let anecdote = await anecdoteService.getById(id)
+    anecdote.votes = anecdote.votes + 1
+    await anecdoteService.update(anecdote)
+    dispatch({
+      type: 'VOTE',
+      data: { id }
+    })
   }
 }
 
@@ -12,7 +17,7 @@ export const createAnecdote = (content) => {
     const data = await anecdoteService.createNew(content)
     dispatch({
       type: 'NEW_ANECDOTE',
-      data  
+      data
     })
   }
 }
