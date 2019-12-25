@@ -52,6 +52,9 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    props.history.push('/')
+    props.setNotification(`a new anecdote ${content} created!`)
+    setTimeout(() => props.setNotification(''), 10000)
   }
 
   return (
@@ -76,6 +79,8 @@ const CreateNew = (props) => {
   )
 
 }
+
+const CreateNewWithRouter = withRouter(CreateNew)
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -128,11 +133,12 @@ const App = () => {
             <Link style={padding} to="/create">create new</Link>
             <Link style={padding} to="/about">about</Link>
           </div>
+          {notification}
           <Route exact path="/" render={() =>
             <AnecdoteList anecdotes={anecdotes} />
           } />
           <Route exact path="/create" render={() =>
-            <CreateNew addNew={addNew} />
+            <CreateNewWithRouter addNew={addNew} setNotification={setNotification} />
           } />
           <Route exact path="/about" render={() =>
             <About />
@@ -142,6 +148,7 @@ const App = () => {
           } />
         </div>
       </Router>
+      <br/>
       <Footer />
     </div>
   )
