@@ -1,12 +1,11 @@
 import React from 'react'
-import blogService from '../services/blogs'
 import { useField } from '../hooks'
 import filterInvalidDOMProps from 'filter-invalid-dom-props'
 import { setNotification } from '../reducers/notificationReducer'
+import { createBlog } from '../reducers/blogReducer'
 import { connect } from 'react-redux'
 
-// form for creating new blog
-const CreateForm = ({ blogs, setBlogs, createBlogVisible, setCreateBlogVisible, ...props }) => {
+const CreateForm = ({ createBlogVisible, setCreateBlogVisible, ...props }) => {
   const title = useField('text')
   const author = useField('text')
   const url = useField('text')
@@ -16,14 +15,11 @@ const CreateForm = ({ blogs, setBlogs, createBlogVisible, setCreateBlogVisible, 
   const handleCreate = async (event) => {
     event.preventDefault()
     try {
-      const blog = await blogService.create({ title: title.value, author: author.value, url: url.value })
+      props.createBlog(title.value, author.value, url.value)
       title.reset()
       author.reset()
       url.reset()
-      const updatedBlogs = blogs.concat(blog)
-      updatedBlogs.sort((a, b) => { return b.likes - a.likes })
-      setBlogs(updatedBlogs)
-      props.setNotification(`a new blog ${blog.title} by ${blog.author} added`, 'info', 3)
+      props.setNotification(`a new blog ${title.value} by ${author.value} added`, 'info', 3)
     } catch (exception) {
       props.setNotification('Failed to create blog', 'error', 3)
     }
@@ -54,4 +50,4 @@ const CreateForm = ({ blogs, setBlogs, createBlogVisible, setCreateBlogVisible, 
   )
 }
 
-export default connect(null, { setNotification })(CreateForm)
+export default connect(null, { setNotification, createBlog })(CreateForm)

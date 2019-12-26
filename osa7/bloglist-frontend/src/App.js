@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import loginService from './services/login'
 import blogService from './services/blogs'
-import Blog from './components/Blog'
 import Notification from './components/Notification'
 import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 import LoginForm from './components/LoginForm'
 import CreateForm from './components/CreateForm'
 import { useField } from './hooks'
 import { connect } from 'react-redux'
+import BlogList from './components/BlogList'
 
 function App(props) {
   const username = useField('text')
   const password = useField('password')
   const [user, setUser] = useState(null)
-  const [blogs, setBlogs] = useState([])
   const [createBlogVisible, setCreateBlogVisible] = useState(false)
 
   useEffect(() => {
-    blogService.getAll().then(initialBlogs => {
-      initialBlogs.sort((a, b) => { return b.likes - a.likes })
-      setBlogs(initialBlogs)
-    })
+    props.initializeBlogs()
   }, [])
 
   useEffect(() => {
@@ -65,15 +62,13 @@ function App(props) {
       {user !== null && <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>}
       {user !== null &&
         <CreateForm
-          blogs={blogs}
-          setBlogs={setBlogs}
           createBlogVisible={createBlogVisible}
           setCreateBlogVisible={setCreateBlogVisible}
         />
       }
-      {user !== null && blogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} />)}
+      {user !== null && <BlogList user={user} />}
     </div>
   )
 }
 
-export default connect(null, { setNotification })(App)
+export default connect(null, { setNotification, initializeBlogs })(App)

@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { likeBlog, removeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, blogs, setBlogs, user }) => {
+const Blog = ({ blog, user, ...props }) => {
   const [showAllInfo, setShowAllInfo] = useState(false)
   const showWhenAllInfo = { display: showAllInfo ? '' : 'none' }
   const createdByLoggedUser = { display: user.username === blog.user.username ? '' : 'none' }
@@ -16,23 +17,12 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
   }
 
   const handleLike = async () => {
-    const blogObject = {
-      title: blog.title,
-      auhtor: blog.author,
-      url: blog.url,
-      likes: blog.likes + 1,
-      user: blog.user.id,
-      id: blog.id
-    }
-    const updatedBlog = await blogService.update(blogObject)
-    const updatedBlogs = blogs.map(b => b.id !== updatedBlog.id ? b : updatedBlog)
-    setBlogs(updatedBlogs.sort((a, b) => { return b.likes - a.likes }))
+    props.likeBlog(blog)
   }
 
   const handleRemove = async () => {
     if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
-      blogService.remove(blog.id)
-      setBlogs(blogs.filter(b => b.id !== blog.id))
+      props.removeBlog(blog.id)
     }
   }
 
@@ -52,12 +42,10 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
 
 }
 
-Blog.propTypes={
+Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  blogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired
 }
 
 
-export default Blog
+export default connect(null, { likeBlog, removeBlog })(Blog)
