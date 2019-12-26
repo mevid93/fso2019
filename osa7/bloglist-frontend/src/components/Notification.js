@@ -2,7 +2,7 @@ import React from 'react'
 import './Notification.css'
 import { connect } from 'react-redux'
 
-const Notification = ({notification}) => {
+const Notification = ({ notification }) => {
   if (notification === null || notification.type === null) {
     return null
   }

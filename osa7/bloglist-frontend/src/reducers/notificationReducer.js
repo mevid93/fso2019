@@ -8,7 +8,7 @@ export const setNotification = (content, notificationType, seconds) => {
         type: notificationType
       }
     })
-    setTimeout(() => {dispatch(clearNotification())}, seconds * 1000)
+    setTimeout(() => { dispatch(clearNotification()) }, seconds * 1000)
   }
 }
 

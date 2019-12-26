@@ -1,9 +1,24 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import filterInvalidDOMProps from 'filter-invalid-dom-props'
+import { setNotification } from '../reducers/notificationReducer'
+import { connect } from 'react-redux'
+import { loginAsUser } from '../reducers/userReducer'
+import loginService from '../services/login'
 
-// Form for log in
-const LoginForm = ({ handleLogin, username, password }) => {
+const LoginForm = ({username, password, ...props}) => {
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      const user = await loginService.login({ username: username.value, password: password.value })
+      props.loginAsUser(user)
+      username.reset()
+      password.reset()
+    } catch (error) {
+      props.setNotification('wrong username or password', 'error', 3)
+    }
+  }
+
   return (
     <div>
       <form className="loginForm" onSubmit={handleLogin}>
@@ -19,10 +34,10 @@ const LoginForm = ({ handleLogin, username, password }) => {
   )
 }
 
-LoginForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
-  username: PropTypes.object.isRequired,
-  password: PropTypes.object.isRequired
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  }
 }
 
-export default LoginForm
+export default connect(mapStateToProps, { setNotification, loginAsUser })(LoginForm)
