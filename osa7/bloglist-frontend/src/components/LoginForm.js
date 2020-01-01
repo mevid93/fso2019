@@ -2,7 +2,7 @@ import React from 'react'
 import filterInvalidDOMProps from 'filter-invalid-dom-props'
 import { setNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
-import { loginAsUser } from '../reducers/userReducer'
+import { loginAsUser } from '../reducers/loginReducer'
 import loginService from '../services/login'
 
 const LoginForm = ({username, password, ...props}) => {

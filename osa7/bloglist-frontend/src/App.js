@@ -2,21 +2,42 @@ import React, { useState, useEffect } from 'react'
 import Notification from './components/Notification'
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
-import { initializeUser, logoutUser } from './reducers/userReducer'
+import { initializeLoggedUser, logoutUser } from './reducers/loginReducer'
 import LoginForm from './components/LoginForm'
 import CreateForm from './components/CreateForm'
 import { connect } from 'react-redux'
 import BlogList from './components/BlogList'
+import UserList from './components/UserList'
 import { useField } from './hooks'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+
+
+const Blogs = () => {
+  const [createBlogVisible, setCreateBlogVisible] = useState(false)
+  return (
+    <div>
+      <CreateForm
+        createBlogVisible={createBlogVisible}
+        setCreateBlogVisible={setCreateBlogVisible}
+      />
+      <BlogList />
+    </div>
+  )
+}
+
+const Users = () => {
+  return (
+    <UserList />
+  )
+}
 
 function App(props) {
   const username = useField('text')
   const password = useField('password')
-  const [createBlogVisible, setCreateBlogVisible] = useState(false)
 
   useEffect(() => {
     props.initializeBlogs()
-    props.initializeUser()
+    props.initializeLoggedUser()
   }, [])
 
   const handleLogout = () => {
@@ -25,17 +46,20 @@ function App(props) {
 
   return (
     <div>
-      {props.user !== null ? <h2>blogs</h2> : <h2>log in to application</h2>}
+      {props.user ? <h2>blogs</h2> : <h2>log in to application</h2>}
       <Notification />
-      {props.user === null && <LoginForm username={username} password={password} />}
-      {props.user !== null && <p>{props.user.name} logged in <button onClick={handleLogout}>logout</button></p>}
-      {props.user !== null &&
-        <CreateForm
-          createBlogVisible={createBlogVisible}
-          setCreateBlogVisible={setCreateBlogVisible}
-        />
-      }
-      {props.user !== null && <BlogList />}
+      {props.user !== null && <p>{props.user.name} logged in</p>}
+      {props.user !== null && <button onClick={handleLogout}>logout</button>}
+
+      <Router>
+        <div>
+          <Route exact path="/" render={() => props.user && <Blogs />} />
+          <Route exact path="/users" render={() => props.user && <Users />} />
+          <Route exact path="/users/:id" render={({ match }) => props.user && <Users />} />
+          <Route path="/login" render={() => props.user == null && <LoginForm username={username} password={password} />} />
+        </div>
+      </Router>
+
     </div>
   )
 }
@@ -46,4 +70,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { setNotification, initializeBlogs, initializeUser, logoutUser })(App)
+const mapDispatchesToProps = {
+  setNotification,
+  initializeBlogs,
+  initializeLoggedUser,
+  logoutUser
+}
+
+export default connect(mapStateToProps, mapDispatchesToProps)(App)
