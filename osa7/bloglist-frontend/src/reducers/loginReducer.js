@@ -1,5 +1,6 @@
 import blogService from '../services/blogs'
 import userService from '../services/users'
+import commentService from '../services/comments'
 
 export const initializeLoggedUser = () => {
   return async dispatch => {
@@ -9,6 +10,7 @@ export const initializeLoggedUser = () => {
       user = JSON.parse(loggedUserJSON)
       blogService.setToken(user.token)
       userService.setToken(user.token)
+      commentService.setToken(user.token)
     }
     dispatch({
       type: 'INITIALIZE_LOGGED_USER',
@@ -22,6 +24,7 @@ export const loginAsUser = (user) => {
     window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
     blogService.setToken(user.token)
     userService.setToken(user.token)
+    commentService.setToken(user.token)
     dispatch({
       type: 'LOGIN',
       data: user

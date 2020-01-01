@@ -1,8 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { likeBlog, removeBlog } from '../reducers/blogReducer'
+import { likeBlog, removeBlog, commentBlog } from '../reducers/blogReducer'
+import { useField } from '../hooks'
+import filterInvalidDOMProps from 'filter-invalid-dom-props'
 
 const Blog = ({ blog, ...props }) => {
+  const content = useField('text')
 
   if (blog === undefined) { return null }
 
@@ -19,6 +22,14 @@ const Blog = ({ blog, ...props }) => {
     }
   }
 
+  const handleComment = async (event) => {
+    event.preventDefault()
+    if(content.value !== '') {
+      props.commentBlog(content.value, blog.id)
+    }
+    content.reset()
+  }
+
   return (
     <div>
       <div>
@@ -31,6 +42,12 @@ const Blog = ({ blog, ...props }) => {
         <button style={createdByLoggedUser} onClick={handleRemove}>remove</button>
       </div>
       <h3>comments</h3>
+      <form onSubmit={handleComment}>
+        <div>
+          <input {...filterInvalidDOMProps(content)} />
+          <button type="submit">add comment</button>
+        </div>
+      </form>
       <ul>
         {blog.comments.map(c => <li key={c.id}>{c.content}</li>)}
       </ul>
@@ -41,8 +58,9 @@ const Blog = ({ blog, ...props }) => {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    blogs: state.blogs
   }
 }
 
-export default connect(mapStateToProps, { likeBlog, removeBlog })(Blog)
+export default connect(mapStateToProps, { likeBlog, removeBlog, commentBlog })(Blog)

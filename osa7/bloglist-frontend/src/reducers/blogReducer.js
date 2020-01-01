@@ -1,4 +1,5 @@
 import blogService from '../services/blogs'
+import commentService from '../services/comments'
 
 export const initializeBlogs = () => {
   return async dispatch => {
@@ -35,9 +36,26 @@ export const likeBlog = (blog) => {
       id: blog.id
     }
     const updatedBlog = await blogService.update(blogObject)
+    updatedBlog.comments = blog.comments // quick fix
     dispatch({
       type: 'LIKE_BLOG',
       data: updatedBlog
+    })
+  }
+}
+
+export const commentBlog = (content, blog_id) => {
+  return async dispatch => {
+    const commentObject = {
+      content
+    }
+    const savedComment = await commentService.create(commentObject, blog_id)
+    dispatch({
+      type: 'COMMENT_BLOG',
+      data: {
+        comment: savedComment,
+        blog_id: blog_id
+      }
     })
   }
 }
@@ -66,6 +84,10 @@ const reducer = (state = [], action) => {
       return updatedBlogs.sort((a, b) => { return b.likes - a.likes })
     case 'REMOVE_BLOG':
       return state.filter(b => b.id !== action.data.id)
+    case 'COMMENT_BLOG':
+      const blog = state.find(b => b.id === action.data.blog_id)
+      blog.comments = blog.comments.concat(action.data.comment)
+      return state.map(b => b.id !== blog.id ? b : blog)
     default:
       return state
   }
