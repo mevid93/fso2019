@@ -10,6 +10,7 @@ import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import { useField } from './hooks'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import User from './components/User'
 
 
 const Blogs = () => {
@@ -44,6 +45,8 @@ function App(props) {
     props.logoutUser()
   }
 
+  const userById = (id) => props.users.find(user => user.id === id)
+
   return (
     <div>
       {props.user ? <h2>blogs</h2> : <h2>log in to application</h2>}
@@ -55,7 +58,7 @@ function App(props) {
         <div>
           <Route exact path="/" render={() => props.user && <Blogs />} />
           <Route exact path="/users" render={() => props.user && <Users />} />
-          <Route exact path="/users/:id" render={({ match }) => props.user && <Users />} />
+          <Route exact path="/users/:id" render={({ match }) => props.user && <User user={userById(match.params.id)} />} />
           <Route path="/login" render={() => props.user == null && <LoginForm username={username} password={password} />} />
         </div>
       </Router>
@@ -66,7 +69,8 @@ function App(props) {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    users: state.users
   }
 }
 
