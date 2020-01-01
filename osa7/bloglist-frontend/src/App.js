@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import { useField } from './hooks'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import User from './components/User'
 import Blog from './components/Blog'
 
@@ -50,14 +50,24 @@ function App(props) {
 
   const blogById = (id) => props.blogs.find(blog => blog.id === id)
 
+  const padding = {
+    padding: 5,
+    backgroundColor: "#87d9e6"
+  }
+
   return (
     <div>
-      {props.user ? <h2>blogs</h2> : <h2>log in to application</h2>}
-      <Notification />
-      {props.user !== null && <p>{props.user.name} logged in</p>}
-      {props.user !== null && <button onClick={handleLogout}>logout</button>}
-
       <Router>
+        <div style={padding}>
+          <Link style={padding} to="/">blogs</Link>
+          <Link style={padding} to="/users">users</Link>
+          {props.user && <em style={padding}>{props.user.name} logged in</em>}
+          {props.user ? <button onClick={handleLogout}>logout</button> : <Link to="/login">login</Link>}
+        </div>
+
+        {props.user ? <h2>blog app</h2> : <h2>log in to application</h2>}
+        <Notification />
+
         <div>
           <Route exact path="/" render={() => props.user && <Blogs />} />
           <Route exact path="/blogs/:id" render={({ match }) => props.user && <Blog blog={blogById(match.params.id)} />} />
