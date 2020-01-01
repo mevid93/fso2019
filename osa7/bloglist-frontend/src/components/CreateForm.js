@@ -4,6 +4,7 @@ import filterInvalidDOMProps from 'filter-invalid-dom-props'
 import { setNotification } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 
 const CreateForm = ({ createBlogVisible, setCreateBlogVisible, ...props }) => {
   const title = useField('text')
@@ -25,26 +26,37 @@ const CreateForm = ({ createBlogVisible, setCreateBlogVisible, ...props }) => {
     }
   }
 
+  const Button = styled.button`
+  background: Bisque;
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 2px solid Chocolate;
+  border-radius: 3px;`
+
+  const Input = styled.input`
+  margin: 0.25em;`
+
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={() => setCreateBlogVisible(true)}>new blog</button>
+        <Button onClick={() => setCreateBlogVisible(true)}>new blog</Button>
       </div>
       <div style={showWhenVisible}>
         <h2>create new</h2>
         <form onSubmit={handleCreate}>
           <div>
-            title: <input {...filterInvalidDOMProps(title)} />
+            title: <Input {...filterInvalidDOMProps(title)} />
           </div>
           <div>
-            author: <input {...filterInvalidDOMProps(author)} />
+            author: <Input {...filterInvalidDOMProps(author)} />
           </div>
           <div>
-            url: <input {...filterInvalidDOMProps(url)} />
+            url: <Input {...filterInvalidDOMProps(url)} />
           </div>
-          <button type="submit">create</button>
+          <Button type="submit">create</Button>
         </form>
-        <button onClick={() => setCreateBlogVisible(false)}>cancel</button>
+        <Button onClick={() => setCreateBlogVisible(false)}>cancel</Button>
       </div>
     </div>
   )

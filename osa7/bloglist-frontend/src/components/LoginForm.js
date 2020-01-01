@@ -4,8 +4,9 @@ import { setNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
 import { loginAsUser } from '../reducers/loginReducer'
 import loginService from '../services/login'
+import { Input, Button } from '../styles'
 
-const LoginForm = ({username, password, ...props}) => {
+const LoginForm = ({ username, password, ...props }) => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -21,14 +22,14 @@ const LoginForm = ({username, password, ...props}) => {
 
   return (
     <div>
-      <form className="loginForm" onSubmit={handleLogin}>
+      <form onSubmit={handleLogin}>
         <div>
-          username <input {...filterInvalidDOMProps(username)} />
+          username <Input {...filterInvalidDOMProps(username)} />
         </div>
         <div>
-          password <input {...filterInvalidDOMProps(password)} />
+          password <Input {...filterInvalidDOMProps(password)} />
         </div>
-        <button type="submit">login</button>
+        <Button type="submit">login</Button>
       </form>
     </div>
   )

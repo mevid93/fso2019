@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { likeBlog, removeBlog, commentBlog } from '../reducers/blogReducer'
 import { useField } from '../hooks'
 import filterInvalidDOMProps from 'filter-invalid-dom-props'
+import { Button, Input } from '../styles'
 
 const Blog = ({ blog, ...props }) => {
   const content = useField('text')
@@ -24,7 +25,7 @@ const Blog = ({ blog, ...props }) => {
 
   const handleComment = async (event) => {
     event.preventDefault()
-    if(content.value !== '') {
+    if (content.value !== '') {
       props.commentBlog(content.value, blog.id)
     }
     content.reset()
@@ -37,15 +38,15 @@ const Blog = ({ blog, ...props }) => {
       </div>
       <div>
         <a href={blog.url}>{blog.url}</a>
-        <div>{blog.likes} likes <button onClick={handleLike}>like</button></div>
+        <div>{blog.likes} likes <Button onClick={handleLike}>like</Button></div>
         <div>added by {blog.user.name}</div>
-        <button style={createdByLoggedUser} onClick={handleRemove}>remove</button>
+        <Button style={createdByLoggedUser} onClick={handleRemove}>remove</Button>
       </div>
       <h3>comments</h3>
       <form onSubmit={handleComment}>
         <div>
-          <input {...filterInvalidDOMProps(content)} />
-          <button type="submit">add comment</button>
+          <Input {...filterInvalidDOMProps(content)} />
+          <Button type="submit">add comment</Button>
         </div>
       </form>
       <ul>
