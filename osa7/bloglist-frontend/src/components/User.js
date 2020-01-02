@@ -7,7 +7,7 @@ const User = (props) => {
       <h2>{props.user.name}</h2>
 
       <h3>added blogs</h3>
-      
+
       <ul>
         {props.user.blogs.map(b => <li key={b.id}>{b.title}</li>)}
       </ul>

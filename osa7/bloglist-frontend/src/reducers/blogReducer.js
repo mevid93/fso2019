@@ -76,18 +76,21 @@ const reducer = (state = [], action) => {
   switch (action.type) {
     case 'INITIALIZE_BLOGS':
       return action.data.blogs
-    case 'CREATE_BLOG':
+    case 'CREATE_BLOG': {
       const concatedBlogs = state.concat(action.data)
       return concatedBlogs.sort((a, b) => { return b.likes - a.likes })
-    case 'LIKE_BLOG':
+    }
+    case 'LIKE_BLOG': {
       const updatedBlogs = state.map(b => b.id !== action.data.id ? b : action.data)
       return updatedBlogs.sort((a, b) => { return b.likes - a.likes })
+    }
     case 'REMOVE_BLOG':
       return state.filter(b => b.id !== action.data.id)
-    case 'COMMENT_BLOG':
+    case 'COMMENT_BLOG': {
       const blog = state.find(b => b.id === action.data.blog_id)
       blog.comments = blog.comments.concat(action.data.comment)
       return state.map(b => b.id !== blog.id ? b : blog)
+    }
     default:
       return state
   }
