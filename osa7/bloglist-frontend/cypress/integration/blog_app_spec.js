@@ -51,6 +51,12 @@ describe('Blog app ', function () {
       cy.contains('log in to application')
     })
 
+    it('user can view other users', function () {
+      cy.contains('users')
+        .click()
+      cy.contains('blogs created')
+    })
+
     it('user can create blog', function () {
       cy.contains('new blog')
         .click()
@@ -63,6 +69,53 @@ describe('Blog app ', function () {
       cy.get('#createblogbutton')
         .click()
       cy.contains('Testititle')
+    })
+
+    describe('when blog exists', function () {
+
+      beforeEach(function () {
+        cy.contains('new blog')
+          .click()
+        cy.get('#title')
+          .type('Testititle')
+        cy.get('#url')
+          .type('http://testiurl.com')
+        cy.get('#author')
+          .type('Testiauthor')
+        cy.get('#createblogbutton')
+          .click()
+      })
+
+      it('user can like blog', function () {
+        cy.contains('Testititle Testiauthor')
+          .click()
+        cy.contains('0 likes')
+        cy.get('#likeblogbutton')
+          .click()
+        cy.contains('1 likes')
+      })
+
+      it('user can comment blog', function () {
+        cy.contains('Testititle Testiauthor')
+          .click()
+        cy.get('#commentfield')
+          .type('testikommentti')
+        cy.get('#addcommentbutton')
+          .click()
+        cy.contains('testikommentti')
+      })
+
+      it('user can remove blog', function () {
+        // after blog has been created
+        // user must revisit home page to get latest ingo... bug somewhere
+        cy.visit('http://localhost:3000')
+        cy.contains('Testititle Testiauthor')
+          .click()
+        cy.get('#removeblogbutton')
+          .click()
+        cy.contains('removed blog Testititle')
+      })
+
     })
 
   })

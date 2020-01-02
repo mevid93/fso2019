@@ -4,6 +4,7 @@ import { likeBlog, removeBlog, commentBlog } from '../reducers/blogReducer'
 import { useField } from '../hooks'
 import filterInvalidDOMProps from 'filter-invalid-dom-props'
 import { Button, Input } from '../styles'
+import { setNotification } from '../reducers/notificationReducer'
 
 const Blog = ({ blog, ...props }) => {
   const content = useField('text')
@@ -20,6 +21,7 @@ const Blog = ({ blog, ...props }) => {
   const handleRemove = async () => {
     if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
       props.removeBlog(blog.id)
+      props.setNotification(`removed blog ${blog.title} by ${blog.author}`, 'info', 3)
     }
   }
 
@@ -38,15 +40,15 @@ const Blog = ({ blog, ...props }) => {
       </div>
       <div>
         <a href={blog.url}>{blog.url}</a>
-        <div>{blog.likes} likes <Button onClick={handleLike}>like</Button></div>
+        <div>{blog.likes} likes <Button id='likeblogbutton' onClick={handleLike}>like</Button></div>
         <div>added by {blog.user.name}</div>
-        <Button style={createdByLoggedUser} onClick={handleRemove}>remove</Button>
+        <Button id='removeblogbutton' style={createdByLoggedUser} onClick={handleRemove}>remove</Button>
       </div>
       <h3>comments</h3>
       <form onSubmit={handleComment}>
         <div>
-          <Input {...filterInvalidDOMProps(content)} />
-          <Button type="submit">add comment</Button>
+          <Input id='commentfield' {...filterInvalidDOMProps(content)} />
+          <Button id='addcommentbutton' type="submit">add comment</Button>
         </div>
       </form>
       <ul>
@@ -64,4 +66,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { likeBlog, removeBlog, commentBlog })(Blog)
+export default connect(mapStateToProps, { likeBlog, removeBlog, commentBlog, setNotification })(Blog)
