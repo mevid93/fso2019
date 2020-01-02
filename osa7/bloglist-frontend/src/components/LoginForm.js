@@ -24,12 +24,12 @@ const LoginForm = ({ username, password, ...props }) => {
     <div>
       <form onSubmit={handleLogin}>
         <div>
-          username <Input {...filterInvalidDOMProps(username)} />
+          username <Input id='username' {...filterInvalidDOMProps(username)} />
         </div>
         <div>
-          password <Input {...filterInvalidDOMProps(password)} />
+          password <Input id='password' {...filterInvalidDOMProps(password)} />
         </div>
-        <Button type="submit">login</Button>
+        <Button id='loginbutton' type="submit">login</Button>
       </form>
     </div>
   )

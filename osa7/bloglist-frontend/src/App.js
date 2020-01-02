@@ -61,7 +61,7 @@ function App(props) {
         <Navigation>
           <Link style={padding} to="/">blogs</Link>
           <Link style={padding} to="/users">users</Link>
-          {props.user && <em style={padding}>{props.user.name} logged in</em>}
+          {props.user && <em style={padding}>{`${props.user.name} logged in`}</em>}
           {props.user ? <Button onClick={handleLogout}>logout</Button> : <Link to="/login">login</Link>}
         </Navigation>
 
