@@ -11,6 +11,7 @@ const ALL_AUTHORS = gql`
     name
     born
     bookCount
+    id
   }
 }
 `
@@ -20,6 +21,7 @@ const ALL_BOOKS = gql`
     title
     author
     published
+    id
   }
 }
 `
@@ -33,20 +35,33 @@ mutation createBook($title: String!, $author: String!, $published: Int!, $genres
   ) {
     title
     author
+    id
   }
 }
 `
+
+const UPDATE_AUTHOR = gql`
+mutation updateAuthor($name: String!, $born: Int!) {
+  editAuthor(
+    name: $name,
+    setBornTo: $born
+  ) {
+    name
+    born
+    id
+  }
+} 
+`
+const handleError = (error) => {
+  console.log(error)
+}
 
 const App = () => {
   const [page, setPage] = useState('authors')
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
-  
-  const handleError = (error) => {
-    console.log(error)
-  }
-
   const [addBook] = useMutation(CREATE_BOOK, { onError: handleError, refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }] })
+  const [updateAuthor] = useMutation(UPDATE_AUTHOR, { onError: handleError })
 
   return (
     <div>
@@ -58,6 +73,7 @@ const App = () => {
 
       <Authors
         result={authors}
+        updateAuthor={updateAuthor}
         show={page === 'authors'}
       />
 
