@@ -52,8 +52,9 @@ const Authors = ({ show, result, updateAuthor }) => {
       <h2>Set birthyear</h2>
       <form onSubmit={handleAuthorUpdate}>
         <div>
-          name
-          <input value={author} onChange={({ target }) => setAuhtor(target.value)} />
+          <select value={author} onChange={({ target }) => setAuhtor(target.value)}>
+            {authors.map(a => <option value={a.name} key={a.id}>{a.name}</option>)}
+          </select>
         </div>
         <div>
           born
