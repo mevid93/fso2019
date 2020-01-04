@@ -1,12 +1,12 @@
 import React from 'react'
 
-const Authors = ({show, result}) => {
+const Authors = ({ show, result }) => {
 
   if (!show) {
     return null
   }
 
-  if(result.loading || result.data === undefined) {
+  if (result.loading || result.data === undefined) {
     return <div>loading...</div>
   }
 
