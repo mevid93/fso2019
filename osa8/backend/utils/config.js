@@ -1,9 +1,9 @@
 require('dotenv').config()
 
-let PORT = process.env.PORT
+let SECRET_KEY = process.env.SECRET_KEY
 let MONGODB_URI = process.env.MONGODB_URI
 
 module.exports = {
   MONGODB_URI,
-  PORT
+  SECRET_KEY
 }
