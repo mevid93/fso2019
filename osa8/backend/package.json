@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apollo-link": "^1.2.13",
+    "apollo-link-context": "^1.0.19",
     "apollo-server": "^2.9.15",
     "dotenv": "^8.2.0",
     "graphql": "^14.5.8",

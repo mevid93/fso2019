@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Authors = ({ show, result, updateAuthor }) => {
+const Authors = ({ token, show, result, updateAuthor }) => {
   const [author, setAuhtor] = useState('')
   const [year, setYear] = useState('')
 
@@ -49,20 +49,24 @@ const Authors = ({ show, result, updateAuthor }) => {
         </tbody>
       </table>
 
-      <h2>Set birthyear</h2>
-      <form onSubmit={handleAuthorUpdate}>
-        <div>
-          <select value={author} onChange={({ target }) => setAuhtor(target.value)}>
-            {authors.map(a => <option value={a.name} key={a.id}>{a.name}</option>)}
-          </select>
-        </div>
-        <div>
-          born
-          <input type='number' value={year} onChange={({ target }) => setYear(target.value)} />
-        </div>
-        <button type='submit' >update author</button>
-      </form>
 
+      {token && <div>
+        <h2>Set birthyear</h2>
+        <form onSubmit={handleAuthorUpdate}>
+          <div>
+            <select value={author} onChange={({ target }) => setAuhtor(target.value)}>
+              <option value='' disabled>Select</option>
+              {authors.map(a => <option value={a.name} key={a.id}>{a.name}</option>)}
+            </select>
+          </div>
+          <div>
+            born
+          <input type='number' value={year} onChange={({ target }) => setYear(target.value)} />
+          </div>
+          <button type='submit' >update author</button>
+        </form>
+      </div>}
+      
     </div>
   )
 }
