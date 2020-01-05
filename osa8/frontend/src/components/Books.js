@@ -21,9 +21,12 @@ const Books = ({ show, result }) => {
 
   const filteredBooks = () => {
     const filteredBooks = books.filter(b => {
+      if(filter === 'all genres') {
+        return true
+      }
       for (let i = 0; i < b.genres.length; i++) {
         const genre = b.genres[i]
-        if (filter === 'all genres' || genre === filter) {
+        if (genre === filter) {
           return true
         }
       }
