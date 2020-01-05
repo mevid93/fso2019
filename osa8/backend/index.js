@@ -21,6 +21,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
 
 
 const typeDefs = gql`
+
   type Author {
     name: String!
     born: Int
