@@ -91,20 +91,29 @@ const resolvers = {
     addBook: async (root, args) => {
       const book = new Book({ ...args })
       let author = await Author.findOne({ name: args.author })
-      if (author === null) {
-        author = new Author({ name: args.author })
-        author = await author.save()
+      try {
+        if (author === null) {
+          author = new Author({ name: args.author })
+          author = await author.save()
+        }
+        book.author = author
+        return book.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
       }
-      book.author = author
-      return book.save()
     },
     editAuthor: async (root, args) => {
       let author = await Author.findOne({ name: args.name })
-      if (author) {
+      try {
         author.born = args.setBornTo
         return author.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
       }
-      return null
     }
   }
 }
