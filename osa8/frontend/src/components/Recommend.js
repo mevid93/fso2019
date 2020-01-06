@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useApolloClient } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
@@ -16,29 +16,19 @@ const Recommend = ({ show, resultBooks }) => {
   const [user, setUser] = useState(undefined)
   const client = useApolloClient()
 
+  useEffect(() => {
+    client.query({ query: USER }).then(response => { setUser(response.data.me) })
+  }, [])
+
   if (!show) {
     return null
   }
 
-  if (resultBooks.data === undefined || resultBooks.data === undefined) {
+  if (resultBooks.data === undefined || resultBooks.data === undefined || user === undefined) {
     return <div>loading...</div>
   }
 
   const books = resultBooks.data.allBooks
-
-  // fetch user info when visiting recommend page...
-  // otherwise there would be error when user goes to recommend after login
-  const currentUser = async (name) => {
-    const { data } = await client.query({
-      query: USER
-    })
-    setUser(data.me)
-  }
-
-  if (user === undefined || user === null) {
-    currentUser()
-    return <div>loading...</div>
-  }
 
   const filteredBooks = () => {
     const filteredBooks = books.filter(b => {

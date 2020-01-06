@@ -18,24 +18,16 @@ const ALL_AUTHORS = gql`
 }
 `
 const ALL_BOOKS = gql`
-{
-  allBooks  {
+query bookQuery($genre: String){
+  allBooks  (
+    genre: $genre
+  ){
     title
     author {
       name
     }
     genres
     published
-    id
-  }
-}
-`
-
-const USER = gql`
-{
-  me {
-    username
-    favoriteGenre
     id
   }
 }
@@ -85,7 +77,6 @@ const App = () => {
   const [token, setToken] = useState(null)
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
-  const user = useQuery(USER)
 
   const handleError = (error) => {
     setErrorMessage(error.graphQLErrors[0].message)
@@ -139,7 +130,7 @@ const App = () => {
       />
 
       <Books
-        result={books}
+        ALL_BOOKS={ALL_BOOKS}
         show={page === 'books'}
       />
 

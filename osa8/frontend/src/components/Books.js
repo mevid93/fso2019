@@ -1,38 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useApolloClient } from '@apollo/react-hooks'
 
-const Books = ({ show, result }) => {
+const Books = ({ show, ALL_BOOKS }) => {
   const [filter, setFilter] = useState('all genres')
+  const [books, setBooks] = useState(undefined)
+  const client = useApolloClient()
+
+  useEffect(() => {
+    const variables = filter === 'all genres' ? null : { genre: filter }
+    client.query({ query: ALL_BOOKS, variables })
+      .then(response => {
+        setBooks(response.data.allBooks) 
+      })
+  }, [filter]);
 
   if (!show) {
     return null
   }
 
-  if (result.loading || result.data === undefined) {
+  if (books === undefined) {
     return <div>loading...</div>
   }
 
-  const books = result.data.allBooks
   const genrelist = ['refactoring', 'agile', 'patterns', 'desing', 'crime', 'classic', 'all genres']
 
   const handleClick = (event) => {
-    event.persist() // hack fix https://medium.com/trabe/react-syntheticevent-reuse-889cd52981b6
+    event.persist()
     setFilter(event.target.value)
-  }
-
-  const filteredBooks = () => {
-    const filteredBooks = books.filter(b => {
-      if(filter === 'all genres') {
-        return true
-      }
-      for (let i = 0; i < b.genres.length; i++) {
-        const genre = b.genres[i]
-        if (genre === filter) {
-          return true
-        }
-      }
-      return false
-    })
-    return filteredBooks
   }
 
   return (
@@ -50,7 +44,7 @@ const Books = ({ show, result }) => {
               published
             </th>
           </tr>
-          {filteredBooks().map(a =>
+          {books.map(a =>
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
