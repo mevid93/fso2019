@@ -2,10 +2,22 @@ import React, { useState, useEffect } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
+import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import Login from './components/Login'
 import Recommend from './components/Recommend'
+
+const BOOK_DETAILS = gql`
+fragment BookDetails on Book {
+  title
+  author {
+    name
+  }
+  genres
+  published
+  id
+}
+`
 
 const ALL_AUTHORS = gql`
 {
@@ -17,20 +29,16 @@ const ALL_AUTHORS = gql`
   }
 }
 `
+
 const ALL_BOOKS = gql`
 query bookQuery($genre: String){
   allBooks  (
     genre: $genre
   ){
-    title
-    author {
-      name
-    }
-    genres
-    published
-    id
+    ...BookDetails
   }
 }
+${BOOK_DETAILS}
 `
 
 const CREATE_BOOK = gql`
@@ -41,13 +49,10 @@ mutation createBook($title: String!, $author: String!, $published: Int!, $genres
     published: $published,
     genres: $genres
   ) {
-    title
-    author {
-      name
-    }
-    id
+    ...BookDetails
   }
 }
+${BOOK_DETAILS}
 `
 
 const UPDATE_AUTHOR = gql`
@@ -71,6 +76,15 @@ const LOGIN = gql`
   }
 `
 
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetails
+    }  
+  }
+  ${BOOK_DETAILS}  
+`
+
 const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [page, setPage] = useState('authors')
@@ -84,6 +98,12 @@ const App = () => {
       setErrorMessage(null)
     }, 10000)
   }
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      window.alert(`Ǹew book (${subscriptionData.data.bookAdded.title}) was added!`)
+    }
+  })
 
   useEffect(() => {
     const token = localStorage.getItem('library-user-token')
