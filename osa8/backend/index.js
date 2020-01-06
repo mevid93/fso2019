@@ -112,12 +112,12 @@ const resolvers = {
       }
       return Book.find({})
     },
-    allAuthors: () => Author.find({})
+    allAuthors: () => Author.find({}).populate('books')
   },
 
   Author: {
     bookCount: (root) => {
-      return Book.find({ author: root.id }).count()
+      return root.books.length
     }
   },
 
@@ -141,7 +141,9 @@ const resolvers = {
           author = await author.save()
         }
         book.author = author
-        await book.save()
+        const savedBook = await book.save()
+        author.books = author.books.concat(savedBook.id)
+        await author.save()
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
